@@ -1,0 +1,41 @@
+1. O App deve ter, no mínimo, 4 views (rotas) principais:
+
+(OK) 1.1 Home
+- lista todos os posts do servidor;
+- Deve ser carregada na URL "/" no browser
+
+(OK) 1.2 Posts de uma Categoria
+- lista todos os posts de uma determinada categoria;
+- Deve ser carregada na URL de padrão "/:categoria" no browser
+
+1.3 Detalhes de um post
+(OK) - Todos os detalhes de um post são exibidos, incluindo a lista de comentários;
+- Deve ser carregada na URL de padrão "/:categoria/:post_id";
+- Devem ser exibidos botões para votar contra, votar a favor, editar e deletar o post;
+- Devem ser exibidos botões para votar contra, votar a favor, editar cada comentário;
+- Deve ser exibido um form para adicionar novos comentários;
+
+1.4 Criar novo post
+- Formulário que permite a criação de um post. Após a criação, o post é inserido e exibido nas listagens;
+- o ID do post deve ser gerado pelo frontend. Dica: veja libs de UUID
+
+
+2. Todos posts em lista devem:
+
+2.1 Exibir as todas informações cadastradas, com exceção da lista de comentários e do corpo do post;
+2.2 Conter (ou "ser") um link para a sua página de detalhes;
+2.3 Conter botões para votar contra, votar a favor, remover e editar o post;
+
+3. Toda página de listagem deve conter um mecanismo para ordenar os post por data ou por vote score;
+
+4. Deve ser possível para o usuário navegar para todas as páginas da aplicação sem a necessidade de digitar um URL;
+
+5. Deve ser possível para o usuário entrar diretamente em qualquer página via URL;
+
+6. Caso o usuário digite uma url de página inexistente ou de dados que foram removidos, uma página de "Erro 404" deve ser exibida;
+
+7. Todos os dados devem ser lidos e/ou gravados no servidor;
+
+8. Caso o REDUX seja utilizado, todos os dados lidos do servidor devem ser armazenados na Redux store, onde os componentes conectarão e obterão quaisquer informações que precisarem;
+8.1 As mudanças nestes dados devem ser feitas através de "actions" de redux.
+8.2 Estado de componentes controlados ou campos de formulários não deve ser colocado na Redux store.

@@ -1,8 +1,29 @@
-import React from "react";
-import Post from "./Post";
+import React, { Component } from "react";
+import PostsList from "./PostsList";
+import { getPostsPerCategories } from "../api/API";
 
-const PostsPerCategory = ({ category }) => {
-  return <Post content={`${category.params.id} Example post for category`} />;
-};
+class PostsPerCategory extends Component {
+  state = {
+    category: "",
+    posts: []
+  };
+
+  componentDidMount() {
+    const category = this.props.match.params.category;
+    getPostsPerCategories(category).then(posts =>
+      this.setState({ category, posts })
+    );
+  }
+
+  render() {
+    const { category, posts } = this.state;
+    return (
+      <div>
+        <h1>{category.toUpperCase()}</h1>
+        <PostsList posts={posts} />
+      </div>
+    );
+  }
+}
 
 export default PostsPerCategory;
