@@ -9,10 +9,19 @@ class PostsPerCategory extends Component {
   };
 
   componentDidMount() {
-    const category = this.props.match.params.category;
+    const { category } = this.props.match.params;
     getPostsPerCategories(category).then(posts =>
       this.setState({ category, posts })
     );
+  }
+
+  componentDidUpdate(prevProps) {
+    const { category } = this.props.match.params;
+    if (category !== prevProps.match.params.category) {
+      getPostsPerCategories(category).then(posts =>
+        this.setState({ category, posts })
+      );
+    }
   }
 
   render() {

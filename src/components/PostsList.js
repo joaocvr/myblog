@@ -9,7 +9,7 @@ const PostsList = ({ posts }) => {
           posts.map(p => {
             return (
               <li key={p.id}>
-                <Link to={`${p.category}/${p.id} `}>
+                <Link to={`/${p.category}/${p.id}`}>
                   <strong>
                     {p.title} (
                     {`${p.commentCount} comments, ${p.voteScore} score votes`})

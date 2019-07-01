@@ -14,7 +14,7 @@ const HEADER = {
 export const getCategories = () =>
   fetch(`${API_URL}/categories`, { headers: HEADER })
     .then(res => res.json())
-    .then(data => data);
+    .then(data => data.categories);
 
 export const getPostsPerCategories = category =>
   fetch(`${API_URL}/${category}/posts`, { headers: HEADER })
