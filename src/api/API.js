@@ -35,3 +35,10 @@ export const getPostComments = postId =>
   fetch(`${API_URL}/posts/${postId}/comments`, { headers: HEADER })
     .then(res => res.json())
     .then(data => data);
+
+export const postVote = (vote, postId) =>
+  fetch(`${API_URL}/comments/${postId}`, {
+    method: "POST",
+    headers: HEADER,
+    option: JSON.stringify({ vote })
+  });

@@ -20,6 +20,7 @@ class App extends Component {
     return (
       <BrowserRouter>
         <div>
+          <Link to={"/"}>Home</Link>
           <div className="Menu">
             <ul>
               {categories &&

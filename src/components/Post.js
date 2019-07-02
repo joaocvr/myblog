@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { getPost, getPostComments } from "../api/API";
 import Comment from "./Comment";
+import UserActions from "./UserActions";
 
 class Post extends Component {
   state = {
@@ -10,6 +11,10 @@ class Post extends Component {
 
   componentDidMount() {
     const { postId } = this.props.match.params;
+    this.updatePost(postId);
+  }
+
+  updatePost(postId) {
     getPost(postId)
       .then(details => {
         this.setState({ details });
@@ -21,9 +26,14 @@ class Post extends Component {
 
   render() {
     const { details, comments } = this.state;
+    const { history } = this.props;
+    const { id } = details;
     return (
       <div>
-        <h1>{details.title}</h1>
+        <h1>
+          {details.title}
+          <UserActions postId={id} updatePost={_ => this.updatePost(id)} />
+        </h1>
         <h3>{details.body}</h3>
         <strong>Author: {details.author}</strong> <br />
         {`Comments: ${details.commentCount}, Votes: ${details.voteScore}`}
@@ -37,6 +47,7 @@ class Post extends Component {
             );
           })}
         </ul>
+        <button onClick={_ => history && history.goBack()}>Back</button>
       </div>
     );
   }

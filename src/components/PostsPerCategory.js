@@ -26,10 +26,12 @@ class PostsPerCategory extends Component {
 
   render() {
     const { category, posts } = this.state;
+    const { history } = this.props;
     return (
       <div>
         <h1>{category.toUpperCase()}</h1>
         <PostsList posts={posts} />
+        <button onClick={_ => history && history.goBack()}>Back</button>
       </div>
     );
   }
