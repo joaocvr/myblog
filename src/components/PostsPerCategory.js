@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import PostsList from "./PostsList";
+import BackButton from "./BackButton";
 import { getPostsPerCategories } from "../api/API";
 
 class PostsPerCategory extends Component {
@@ -31,7 +32,7 @@ class PostsPerCategory extends Component {
       <div>
         <h1>{category.toUpperCase()}</h1>
         <PostsList posts={posts} />
-        <button onClick={_ => history && history.goBack()}>Back</button>
+        <BackButton history={history} />
       </div>
     );
   }

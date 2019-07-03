@@ -19,8 +19,6 @@ const PostsList = ({ posts }) => {
                 Category: {p.category}
                 <br />
                 Author: {p.author} <br />
-                {p.body} <br />
-                <br />
               </li>
             );
           })}

@@ -1,15 +1,24 @@
 import React from "react";
-import { postVote } from "../api/API";
 
-const UserActions = ({ postId }) => {
+const UserActions = ({ id, voteFunction, update }) => {
   return (
     <div>
       <button
-        onClick={_ => postVote("upVote", postId).then(r => console.log(r))}
+        onClick={_ => {
+          voteFunction("upVote", id);
+          update();
+        }}
       >
-        +
+        Up vote
       </button>
-      <button onClick={_ => console.log()}>-</button>
+      <button
+        onClick={_ => {
+          voteFunction("downVote", id);
+          update();
+        }}
+      >
+        Down vote
+      </button>
       <button onClick={_ => console.log()}>Edit</button>
       <button onClick={_ => console.log()}>Delete</button>
     </div>

@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import { getPost, getPostComments } from "../api/API";
 import Comment from "./Comment";
+import BackButton from "./BackButton";
 import UserActions from "./UserActions";
+import { votePost } from "../api/API";
 
 class Post extends Component {
   state = {
@@ -32,22 +34,30 @@ class Post extends Component {
       <div>
         <h1>
           {details.title}
-          <UserActions postId={id} updatePost={_ => this.updatePost(id)} />
+          <UserActions
+            id={id}
+            voteFunction={(vote, id) => votePost(vote, id)}
+            update={_ => this.updatePost(id)}
+          />
         </h1>
         <h3>{details.body}</h3>
         <strong>Author: {details.author}</strong> <br />
         {`Comments: ${details.commentCount}, Votes: ${details.voteScore}`}
         <h3>Comments</h3>
         <ul>
-          {comments.map(c => {
-            return (
-              <li key={c.id}>
-                <Comment comment={c} />
-              </li>
-            );
-          })}
+          {comments &&
+            comments.map(c => {
+              return (
+                <li key={c.id}>
+                  <Comment
+                    comment={c}
+                    updatePost={_ => this.updatePost(c.parentId)}
+                  />
+                </li>
+              );
+            })}
         </ul>
-        <button onClick={_ => history && history.goBack()}>Back</button>
+        <BackButton history={history} />
       </div>
     );
   }
