@@ -1,9 +1,8 @@
 import React, { Component } from "react";
-import { getPost, getPostComments } from "../api/API";
 import Comment from "./Comment";
 import BackButton from "./BackButton";
 import UserActions from "./UserActions";
-import { votePost } from "../api/API";
+import { getPost, votePost, getPostComments, voteComment } from "../api/API";
 
 class Post extends Component {
   state = {
@@ -26,20 +25,48 @@ class Post extends Component {
       });
   }
 
+  votePostState(vote, id) {
+    votePost(vote, id).then(() => {
+      const { details } = this.state;
+      if (vote === "upVote") {
+        this.setState({
+          details: { ...details, voteScore: details.voteScore + 1 }
+        });
+      } else {
+        this.setState({
+          details: { ...details, voteScore: details.voteScore - 1 }
+        });
+      }
+    });
+  }
+
+  voteCommentState(vote, id) {
+    voteComment(vote, id).then(() => {
+      const { comments } = this.state;
+      if (vote === "upVote") {
+        comments.map(c =>
+          c.id === id ? (c.voteScore = c.voteScore + 1) : c.voteScore
+        );
+      } else {
+        comments.map(c =>
+          c.id === id ? (c.voteScore = c.voteScore - 1) : c.voteScore
+        );
+      }
+      this.setState({ comments });
+    });
+  }
+
   render() {
     const { details, comments } = this.state;
-    const { history } = this.props;
     const { id } = details;
     return (
       <div>
-        <h1>
-          {details.title}
-          <UserActions
-            id={id}
-            voteFunction={(vote, id) => votePost(vote, id)}
-            update={_ => this.updatePost(id)}
-          />
-        </h1>
+        <h1>{details.title}</h1>
+        <UserActions
+          id={id}
+          voter={(vote, id) => this.votePostState(vote, id)}
+          deleter={id => this.deletePost(id)}
+        />
         <h3>{details.body}</h3>
         <strong>Author: {details.author}</strong> <br />
         {`Comments: ${details.commentCount}, Votes: ${details.voteScore}`}
@@ -51,13 +78,14 @@ class Post extends Component {
                 <li key={c.id}>
                   <Comment
                     comment={c}
-                    updatePost={_ => this.updatePost(c.parentId)}
+                    voter={(vote, id) => this.voteCommentState(vote, id)}
+                    deleter={id => this.delete(id)}
                   />
                 </li>
               );
             })}
         </ul>
-        <BackButton history={history} />
+        <BackButton />
       </div>
     );
   }

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PostsList from "./PostsList";
-import { getAllPosts } from "../api/API";
+import { getAllPosts, deletePost } from "../api/API";
 
 class Home extends Component {
   state = {
@@ -13,11 +13,15 @@ class Home extends Component {
     });
   }
 
+  deletePost(id) {
+    deletePost(id).then(details => this.setState({ details }));
+  }
+
   render() {
     const { allPosts } = this.state;
     return (
       <div>
-        <PostsList posts={allPosts} />
+        <PostsList posts={allPosts} deleter={() => this.deletePost} />
       </div>
     );
   }
