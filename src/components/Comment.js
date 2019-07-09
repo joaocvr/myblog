@@ -3,14 +3,14 @@ import UserActions from "./UserActions";
 
 class Comment extends Component {
   render() {
-    const { comment, voter, deleter } = this.props;
+    const { comment, voteAction, deleteAction } = this.props;
     return (
       <div>
         <strong>{comment.body}</strong>
         <UserActions
           id={comment.id}
-          voter={(vote, id) => voter(vote, id)}
-          deleter={() => deleter(comment.id)}
+          voteAction={(vote, id) => voteAction(vote, id)}
+          deleteAction={() => deleteAction(comment.id)}
         />
         <br />
         Author: {comment.author} <br />

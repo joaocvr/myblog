@@ -1,24 +1,12 @@
 import React from "react";
 
-const UserActions = ({ id, voter, deleter }) => {
+const UserActions = ({ id, voteAction, deleteAction }) => {
   return (
     <div>
-      <button
-        onClick={_ => {
-          voter("upVote", id);
-        }}
-      >
-        Up vote
-      </button>
-      <button
-        onClick={_ => {
-          voter("downVote", id);
-        }}
-      >
-        Down vote
-      </button>
-      <button onClick={_ => console.log()}>Edit</button>
-      <button onClick={_ => deleter(id)}>Delete</button>
+      <button onClick={() => voteAction("upVote", id)}>Up vote</button>
+      <button onClick={() => voteAction("downVote", id)}>Down vote</button>
+      <button onClick={() => console.log()}>Edit</button>
+      <button onClick={() => deleteAction(id)}>Delete</button>
     </div>
   );
 };

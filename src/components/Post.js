@@ -2,7 +2,15 @@ import React, { Component } from "react";
 import Comment from "./Comment";
 import BackButton from "./BackButton";
 import UserActions from "./UserActions";
-import { getPost, votePost, getPostComments, voteComment } from "../api/API";
+import { withRouter } from "react-router-dom";
+import {
+  getPost,
+  votePost,
+  getPostComments,
+  voteComment,
+  deletePost,
+  deleteComment
+} from "../api/API";
 
 class Post extends Component {
   state = {
@@ -56,7 +64,17 @@ class Post extends Component {
     });
   }
 
+  deleteCommentState(id) {
+    const { comments } = this.state;
+    deleteComment(id).then(commentDeleted =>
+      this.setState({
+        comments: comments.filter(c => c.id !== commentDeleted.id)
+      })
+    );
+  }
+
   render() {
+    const { history } = this.props;
     const { details, comments } = this.state;
     const { id } = details;
     return (
@@ -64,8 +82,10 @@ class Post extends Component {
         <h1>{details.title}</h1>
         <UserActions
           id={id}
-          voter={(vote, id) => this.votePostState(vote, id)}
-          deleter={id => this.deletePost(id)}
+          voteAction={(vote, id) => this.votePostState(vote, id)}
+          deleteAction={id =>
+            deletePost(id).then(() => history && history.goBack())
+          }
         />
         <h3>{details.body}</h3>
         <strong>Author: {details.author}</strong> <br />
@@ -73,17 +93,19 @@ class Post extends Component {
         <h3>Comments</h3>
         <ul>
           {comments &&
-            comments.map(c => {
-              return (
-                <li key={c.id}>
-                  <Comment
-                    comment={c}
-                    voter={(vote, id) => this.voteCommentState(vote, id)}
-                    deleter={id => this.delete(id)}
-                  />
-                </li>
-              );
-            })}
+            comments
+              .filter(c => c.deleted === false)
+              .map(c => {
+                return (
+                  <li key={c.id}>
+                    <Comment
+                      comment={c}
+                      voteAction={(vote, id) => this.voteCommentState(vote, id)}
+                      deleteAction={() => this.deleteCommentState(c.id)}
+                    />
+                  </li>
+                );
+              })}
         </ul>
         <BackButton />
       </div>
@@ -91,4 +113,4 @@ class Post extends Component {
   }
 }
 
-export default Post;
+export default withRouter(Post);
