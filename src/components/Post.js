@@ -33,9 +33,10 @@ class Post extends Component {
       });
   }
 
-  votePostState(vote, id) {
+  votePostAction(vote) {
+    const { details } = this.state;
+    const { id } = details;
     votePost(vote, id).then(() => {
-      const { details } = this.state;
       if (vote === "upVote") {
         this.setState({
           details: { ...details, voteScore: details.voteScore + 1 }
@@ -48,7 +49,7 @@ class Post extends Component {
     });
   }
 
-  voteCommentState(vote, id) {
+  voteCommentAction(vote, id) {
     voteComment(vote, id).then(() => {
       const { comments } = this.state;
       if (vote === "upVote") {
@@ -64,7 +65,7 @@ class Post extends Component {
     });
   }
 
-  deleteCommentState(id) {
+  deleteCommentAction(id) {
     const { comments } = this.state;
     deleteComment(id).then(commentDeleted =>
       this.setState({
@@ -76,15 +77,13 @@ class Post extends Component {
   render() {
     const { history } = this.props;
     const { details, comments } = this.state;
-    const { id } = details;
     return (
       <div>
         <h1>{details.title}</h1>
         <UserActions
-          id={id}
-          voteAction={(vote, id) => this.votePostState(vote, id)}
-          deleteAction={id =>
-            deletePost(id).then(() => history && history.goBack())
+          voteAction={vote => this.votePostAction(vote)}
+          deleteAction={() =>
+            deletePost(details.id).then(() => history && history.goBack())
           }
         />
         <h3>{details.body}</h3>
@@ -100,8 +99,8 @@ class Post extends Component {
                   <li key={c.id}>
                     <Comment
                       comment={c}
-                      voteAction={(vote, id) => this.voteCommentState(vote, id)}
-                      deleteAction={() => this.deleteCommentState(c.id)}
+                      voteAction={vote => this.voteCommentAction(vote, c.id)}
+                      deleteAction={() => this.deleteCommentAction(c.id)}
                     />
                   </li>
                 );

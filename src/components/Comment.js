@@ -8,8 +8,7 @@ class Comment extends Component {
       <div>
         <strong>{comment.body}</strong>
         <UserActions
-          id={comment.id}
-          voteAction={(vote, id) => voteAction(vote, id)}
+          voteAction={vote => voteAction(vote, comment.id)}
           deleteAction={() => deleteAction(comment.id)}
         />
         <br />
