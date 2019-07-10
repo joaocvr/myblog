@@ -1,3 +1,7 @@
+Erros a corrigir:
+- Atualizar o contador de comentários na página de Post quando um for deletado.
+- Não exibir post não encontrado (tanto apagado quanto nunca existiu), rotear para uma ágina padrão de erro. Testar a consulta do post através da url.
+
 1. O App deve ter, no mínimo, 4 views (rotas) principais:
 
 (OK) 1.1 Home
