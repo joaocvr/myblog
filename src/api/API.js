@@ -81,3 +81,20 @@ export const deleteComment = id =>
   })
     .then(res => res.json())
     .then(data => data);
+
+export const editComment = comment => {
+  console.log("comment", comment);
+  fetch(`${API_URL}/comments/${comment.id}`, {
+    method: "PUT",
+    headers: {
+      ...headers,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ ...comment })
+  })
+    .then(res => {
+      console.log("res.json()", res.json());
+      res.json();
+    })
+    .then(data => console.log("data", data));
+};

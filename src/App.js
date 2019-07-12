@@ -34,7 +34,12 @@ class App extends Component {
           <Switch>
             <Route exact path="/" component={Home} />
             <Route path="/:categoria/:postId" component={Post} />
-            <Route path="/:category" component={PostsPerCategory} />
+            <Route
+              path="/:category"
+              render={props => (
+                <PostsPerCategory {...props} categories={categories} />
+              )}
+            />
             <Route path="/newPost" component={NewPost} />
           </Switch>
         </div>

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import PostsList from "./PostsList";
 import BackButton from "./BackButton";
 import { getPostsPerCategories } from "../api/API";
+import Error404 from "./Error404";
 
 class PostsPerCategory extends Component {
   state = {
@@ -27,12 +28,19 @@ class PostsPerCategory extends Component {
 
   render() {
     const { category, posts } = this.state;
+    const { categories } = this.props;
+    const errorPage =
+      categories.filter(c => c.name === category).length === 0 ? (
+        <Error404 />
+      ) : null;
     return (
-      <div>
-        <h1>{category.toUpperCase()}</h1>
-        <PostsList posts={posts} />
-        <BackButton />
-      </div>
+      errorPage || (
+        <div>
+          <h1>{category.toUpperCase()}</h1>
+          <PostsList posts={posts} />
+          <BackButton />
+        </div>
+      )
     );
   }
 }
