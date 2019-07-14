@@ -3,7 +3,6 @@ import BackButton from "./BackButton";
 import UserActions from "./UserActions";
 import { withRouter } from "react-router-dom";
 import { getPost, votePost, deletePost } from "../api/API";
-import Error404 from "./Error404";
 import CommentsList from "./CommentsList";
 
 class Post extends Component {
@@ -13,7 +12,13 @@ class Post extends Component {
 
   updatePost(postId) {
     getPost(postId).then(details => {
-      this.setState({ details });
+      const { history } = this.props;
+      const { categoria } = this.props.match.params;
+      const error =
+        Object.keys(details).length === 0 ||
+        details.error ||
+        categoria !== details.category;
+      return error ? history.push("/error404") : this.setState({ details });
     });
   }
 
@@ -41,35 +46,25 @@ class Post extends Component {
   render() {
     const { history } = this.props;
     const { details } = this.state;
-    const { categoria } = this.props.match.params;
-    const errorPage =
-      Object.keys(details).length === 0 ||
-      details.error ||
-      categoria !== details.category ? (
-        <Error404 />
-      ) : null;
     return (
-      errorPage || (
-        <div>
-          <h1>{details.title}</h1>
-          <UserActions
-            voteAction={vote => this.votePostAction(vote)}
-            deleteAction={() =>
-              deletePost(details.id).then(() => history && history.goBack())
-            }
-          />
-          <h3>{details.body}</h3>
-          <strong>Author: {details.author}</strong> <br />
-          {`Comments: ${details.commentCount}, Votes: ${details.voteScore}`}
-          <h3>Comments</h3>
-          <CommentsList
-            postId={details.id}
-            updatePost={() => this.updatePost(details.id)}
-          />
+      <div>
+        <h1>{details.title}</h1>
+        <UserActions
+          voteAction={vote => this.votePostAction(vote)}
+          deleteAction={() =>
+            deletePost(details.id).then(() => history && history.goBack())
           }
-          <BackButton />
-        </div>
-      )
+        />
+        <h3>{details.body}</h3>
+        <strong>Author: {details.author}</strong> <br />
+        {`Comments: ${details.commentCount}, Votes: ${details.voteScore}`}
+        <h3>Comments</h3>
+        <CommentsList
+          postId={details.id}
+          updatePost={() => this.updatePost(details.id)}
+        />
+        <BackButton />
+      </div>
     );
   }
 }

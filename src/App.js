@@ -5,6 +5,7 @@ import PostsPerCategory from "./components/PostsPerCategory";
 import Post from "./components/Post";
 import NewPost from "./components/NewPost";
 import { getCategories } from "./api/API";
+import Error404 from "./components/Error404";
 
 class App extends Component {
   state = {
@@ -33,6 +34,7 @@ class App extends Component {
           </div>
           <Switch>
             <Route exact path="/" component={Home} />
+            <Route path="*/error404" component={Error404} />
             <Route path="/:categoria/:postId" component={Post} />
             <Route
               path="/:category"

@@ -7,11 +7,6 @@ class CommentsList extends Component {
     comments: []
   };
 
-  componentDidMount() {
-    const { postId } = this.props;
-    getPostComments(postId).then(comments => this.setState({ comments }));
-  }
-
   voteCommentAction(vote, id) {
     voteComment(vote, id).then(() => {
       const { comments } = this.state;
@@ -38,6 +33,15 @@ class CommentsList extends Component {
         })
       )
       .then(updatePost);
+  }
+
+  componentDidUpdate(prevProps) {
+    const { postId } = this.props;
+    if (postId !== prevProps.postId) {
+      getPostComments(postId).then(comments => {
+        this.setState({ comments });
+      });
+    }
   }
 
   render() {
