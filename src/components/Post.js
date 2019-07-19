@@ -2,23 +2,43 @@ import React, { Component } from "react";
 import BackButton from "./BackButton";
 import UserActions from "./UserActions";
 import { withRouter } from "react-router-dom";
-import { getPost, votePost, deletePost } from "../api/API";
+import { getPost, votePost, deletePost, editPost } from "../api/API";
 import CommentsList from "./CommentsList";
 
 class Post extends Component {
   state = {
-    details: {}
+    details: {},
+    isEditable: false
   };
+
+  editPostDetails(event) {
+    const { details } = this.state;
+    const { name } = event.target;
+    if (name === "body") {
+      this.setState({ details: { ...details, body: event.target.value } });
+    } else {
+      this.setState({ details: { ...details, title: event.target.value } });
+    }
+  }
+
+  submitPostDetails() {
+    const { details } = this.state;
+    editPost(details).then(() => this.setState({ isEditable: false }));
+  }
 
   updatePost(postId) {
     getPost(postId).then(details => {
       const { history } = this.props;
       const { categoria } = this.props.match.params;
-      const error =
+      if (
         Object.keys(details).length === 0 ||
         details.error ||
-        categoria !== details.category;
-      return error ? history.push("/error404") : this.setState({ details });
+        categoria !== details.category
+      ) {
+        history.push("/error404");
+      } else {
+        this.setState({ details });
+      }
     });
   }
 
@@ -45,17 +65,44 @@ class Post extends Component {
 
   render() {
     const { history } = this.props;
-    const { details } = this.state;
-    return (
+    const { details, isEditable } = this.state;
+
+    const postHeader = !isEditable ? (
       <div>
         <h1>{details.title}</h1>
+        <h3>{details.body}</h3>
         <UserActions
           voteAction={vote => this.votePostAction(vote)}
+          editAction={() => this.setState({ isEditable: true })}
           deleteAction={() =>
             deletePost(details.id).then(() => history && history.goBack())
           }
         />
-        <h3>{details.body}</h3>
+      </div>
+    ) : (
+      <form onSubmit={() => this.submitPostDetails()}>
+        <input
+          value={details.title}
+          name="title"
+          onChange={event => this.editPostDetails(event)}
+        />
+        <br />
+        <input
+          value={details.body}
+          name="body"
+          onChange={event => this.editPostDetails(event)}
+        />
+        <br />
+        <button>Save</button>
+        <button onClick={() => this.setState({ isEditable: false })}>
+          Cancel
+        </button>
+      </form>
+    );
+
+    return (
+      <div>
+        {postHeader}
         <strong>Author: {details.author}</strong> <br />
         {`Comments: ${details.commentCount}, Votes: ${details.voteScore}`}
         <h3>Comments</h3>

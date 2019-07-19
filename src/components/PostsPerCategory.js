@@ -6,7 +6,6 @@ import { withRouter } from "react-router";
 
 class PostsPerCategory extends Component {
   state = {
-    category: "",
     posts: []
   };
 
@@ -16,21 +15,20 @@ class PostsPerCategory extends Component {
       const { categories, history } = this.props;
       return !categories.find(c => c.name === category)
         ? history.push("/error404")
-        : this.setState({ category, posts });
+        : this.setState({ posts });
     });
   }
 
   componentDidUpdate(prevProps) {
     const { category } = this.props.match.params;
     if (category !== prevProps.match.params.category) {
-      getPostsPerCategories(category).then(posts =>
-        this.setState({ category, posts })
-      );
+      getPostsPerCategories(category).then(posts => this.setState({ posts }));
     }
   }
 
   render() {
-    const { category, posts } = this.state;
+    const { posts } = this.state;
+    const { category } = this.props.match.params;
     return (
       <div>
         <h1>{category.toUpperCase()}</h1>

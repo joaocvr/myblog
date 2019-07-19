@@ -12,7 +12,7 @@
 (OK) - Todos os detalhes de um post são exibidos, incluindo a lista de comentários;
 (OK) - Deve ser carregada na URL de padrão "/:categoria/:post_id";
 - Devem ser exibidos botões para votar contra, votar a favor, editar e deletar o post;
-- Devem ser exibidos botões para votar contra, votar a favor, editar cada comentário;
+(OK) - Devem ser exibidos botões para votar contra, votar a favor, editar cada comentário;
 - Deve ser exibido um form para adicionar novos comentários;
 
 1.4 Criar novo post
@@ -23,7 +23,7 @@
 2. Todos posts em lista devem:
 
 2.1 Exibir as todas informações cadastradas, com exceção da lista de comentários e do corpo do post;
-2.2 Conter (ou "ser") um link para a sua página de detalhes;
+(OK) 2.2 Conter (ou "ser") um link para a sua página de detalhes;
 2.3 Conter botões para votar contra, votar a favor, remover e editar o post;
 
 3. Toda página de listagem deve conter um mecanismo para ordenar os post por data ou por vote score;

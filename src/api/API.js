@@ -82,8 +82,7 @@ export const deleteComment = id =>
     .then(res => res.json())
     .then(data => data);
 
-export const editComment = comment => {
-  console.log("comment", comment);
+export const editComment = async comment => {
   fetch(`${API_URL}/comments/${comment.id}`, {
     method: "PUT",
     headers: {
@@ -92,9 +91,19 @@ export const editComment = comment => {
     },
     body: JSON.stringify({ ...comment })
   })
-    .then(res => {
-      console.log("res.json()", res.json());
-      res.json();
-    })
-    .then(data => console.log("data", data));
+    .then(res => res.json())
+    .then(data => data);
+};
+
+export const editPost = async post => {
+  fetch(`${API_URL}/posts/${post.id}`, {
+    method: "PUT",
+    headers: {
+      ...headers,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(post)
+  })
+    .then(res => res.json())
+    .then(data => data);
 };
