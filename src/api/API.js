@@ -120,3 +120,16 @@ export const addNewPost = async post => {
     .then(res => res.json())
     .then(data => data);
 };
+
+export const addNewComment = async comment => {
+  fetch(`${API_URL}/comments`, {
+    method: "POST",
+    headers: {
+      ...headers,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(comment)
+  })
+    .then(res => res.json())
+    .then(data => data);
+};

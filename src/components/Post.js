@@ -4,11 +4,13 @@ import UserActions from "./UserActions";
 import { withRouter } from "react-router-dom";
 import { getPost, votePost, deletePost, editPost } from "../api/API";
 import CommentsList from "./CommentsList";
+import NewComment from "./NewComment";
 
 class Post extends Component {
   state = {
     details: {},
-    isEditable: false
+    isEditable: false,
+    isNewComment: false
   };
 
   getPostFields() {
@@ -106,15 +108,25 @@ class Post extends Component {
   }
 
   render() {
-    const { details } = this.state;
+    const { details, isNewComment } = this.state;
     const postFields = this.getPostFields();
-
     return (
       <div>
         {postFields}
         <strong>Author: {details.author}</strong> <br />
         {`Comments: ${details.commentCount}, Votes: ${details.voteScore}`}
         <h3>Comments</h3>
+        {isNewComment ? (
+          <NewComment
+            close={() => this.setState({ isNewComment: false })}
+            postId={details.id}
+          />
+        ) : (
+          <button onClick={() => this.setState({ isNewComment: true })}>
+            New comment
+          </button>
+        )}
+        <br />
         <CommentsList
           postId={details.id}
           updatePost={() => this.updatePost(details.id)}

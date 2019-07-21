@@ -18,18 +18,23 @@ class NewPost extends Component {
 
   submitNewPost(e) {
     e.preventDefault();
-    addNewPost({ ...this.state }).then(() => {
-      const { history } = this.props;
-      history.push("/");
-    });
+    const { title, body, author } = this.state;
+    if (title && body && author) {
+      addNewPost({ ...this.state }).then(() => {
+        const { history } = this.props;
+        history.push("/");
+      });
+    } else {
+      alert("You need to fullfill all the fields.");
+    }
   }
 
   componentDidMount() {
     const { categories, location } = this.props;
+    const firstCategoryName =
+      Array.isArray(categories) && categories.length ? categories[0].name : "";
     const category =
-      location && location.state
-        ? location.state.category.name
-        : categories[0].name;
+      location && location.state ? location.state.category : firstCategoryName;
     this.setState({ category, id: uuid.v4(), timestamp: Date.now() });
   }
 

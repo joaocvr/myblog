@@ -1,32 +1,31 @@
 1. O App deve ter, no mínimo, 4 views (rotas) principais:
 
 (OK) 1.1 Home
-- lista todos os posts do servidor;
-- Deve ser carregada na URL "/" no browser
+        - lista todos os posts do servidor;
+        - Deve ser carregada na URL "/" no browser
 
 (OK) 1.2 Posts de uma Categoria
-- lista todos os posts de uma determinada categoria;
-- Deve ser carregada na URL de padrão "/:categoria" no browser
+        - lista todos os posts de uma determinada categoria;
+        - Deve ser carregada na URL de padrão "/:categoria" no browser
 
-1.3 Detalhes de um post
-(OK) - Todos os detalhes de um post são exibidos, incluindo a lista de comentários;
-(OK) - Deve ser carregada na URL de padrão "/:categoria/:post_id";
-(OK) - Devem ser exibidos botões para votar contra, votar a favor, editar e deletar o post;
-(OK) - Devem ser exibidos botões para votar contra, votar a favor, editar cada comentário;
-- Deve ser exibido um form para adicionar novos comentários;
+(OK) 1.3 Detalhes de um post
+    - Todos os detalhes de um post são exibidos, incluindo a lista de comentários;
+    - Deve ser carregada na URL de padrão "/:categoria/:post_id";
+    - Devem ser exibidos botões para votar contra, votar a favor, editar e deletar o post;
+    - Devem ser exibidos botões para votar contra, votar a favor, editar cada comentário;
+    - Deve ser exibido um form para adicionar novos comentários;
 
-1.4 Criar novo post
-- Formulário que permite a criação de um post. Após a criação, o post é inserido e exibido nas listagens;
-- o ID do post deve ser gerado pelo frontend. Dica: veja libs de UUID
+(OK) 1.4 Criar novo post
+        - Formulário que permite a criação de um post. Após a criação, o post é inserido e exibido nas listagens;
+        - o ID do post deve ser gerado pelo frontend. Dica: veja libs de UUID
 
 
-2. Todos posts em lista devem:
+(OK) 2. Todos posts em lista devem:
+        2.1 Exibir as todas informações cadastradas, com exceção da lista de comentários e do corpo do post;
+        2.2 Conter (ou "ser") um link para a sua página de detalhes;
+        2.3 Conter botões para votar contra, votar a favor, remover e editar o post;
 
-2.1 Exibir as todas informações cadastradas, com exceção da lista de comentários e do corpo do post;
-(OK) 2.2 Conter (ou "ser") um link para a sua página de detalhes;
-2.3 Conter botões para votar contra, votar a favor, remover e editar o post;
-
-3. Toda página de listagem deve conter um mecanismo para ordenar os post por data ou por vote score;
+=> 3. Toda página de listagem deve conter um mecanismo para ordenar os post por data ou por vote score;
 
 (OK) 4. Deve ser possível para o usuário navegar para todas as páginas da aplicação sem a necessidade de digitar um URL;
 
