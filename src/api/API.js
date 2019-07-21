@@ -107,3 +107,16 @@ export const editPost = async post => {
     .then(res => res.json())
     .then(data => data);
 };
+
+export const addNewPost = async post => {
+  fetch(`${API_URL}/posts`, {
+    method: "POST",
+    headers: {
+      ...headers,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(post)
+  })
+    .then(res => res.json())
+    .then(data => data);
+};

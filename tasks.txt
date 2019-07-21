@@ -11,7 +11,7 @@
 1.3 Detalhes de um post
 (OK) - Todos os detalhes de um post são exibidos, incluindo a lista de comentários;
 (OK) - Deve ser carregada na URL de padrão "/:categoria/:post_id";
-- Devem ser exibidos botões para votar contra, votar a favor, editar e deletar o post;
+(OK) - Devem ser exibidos botões para votar contra, votar a favor, editar e deletar o post;
 (OK) - Devem ser exibidos botões para votar contra, votar a favor, editar cada comentário;
 - Deve ser exibido um form para adicionar novos comentários;
 

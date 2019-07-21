@@ -34,7 +34,11 @@ class App extends Component {
           </div>
           <Switch>
             <Route exact path="/" component={Home} />
-            <Route path="*/error404" component={Error404} />
+            <Route
+              path="/newPost"
+              render={props => <NewPost {...props} categories={categories} />}
+            />
+            <Route path="/error404" component={Error404} />
             <Route path="/:categoria/:postId" component={Post} />
             <Route
               path="/:category"
@@ -42,7 +46,6 @@ class App extends Component {
                 <PostsPerCategory {...props} categories={categories} />
               )}
             />
-            <Route path="/newPost" component={NewPost} />
           </Switch>
         </div>
       </BrowserRouter>

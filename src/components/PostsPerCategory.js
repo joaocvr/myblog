@@ -3,6 +3,7 @@ import PostsList from "./PostsList";
 import BackButton from "./BackButton";
 import { getPostsPerCategories } from "../api/API";
 import { withRouter } from "react-router";
+import { Link } from "react-router-dom";
 
 class PostsPerCategory extends Component {
   state = {
@@ -33,6 +34,9 @@ class PostsPerCategory extends Component {
       <div>
         <h1>{category.toUpperCase()}</h1>
         <PostsList posts={posts} />
+        <Link to={{ pathname: "/newPost", state: { category } }}>
+          <button>Add a new post</button>
+        </Link>
         <BackButton />
       </div>
     );

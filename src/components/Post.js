@@ -11,6 +11,48 @@ class Post extends Component {
     isEditable: false
   };
 
+  getPostFields() {
+    const { history } = this.props;
+    const { details, isEditable } = this.state;
+
+    return (
+      <div>
+        {!isEditable ? (
+          <div>
+            <h1>{details.title}</h1>
+            <h3>{details.body}</h3>
+            <UserActions
+              voteAction={vote => this.votePostAction(vote)}
+              editAction={() => this.setState({ isEditable: true })}
+              deleteAction={() =>
+                deletePost(details.id).then(() => history && history.goBack())
+              }
+            />
+          </div>
+        ) : (
+          <form onSubmit={() => this.submitPostDetails()}>
+            <input
+              value={details.title}
+              name="title"
+              onChange={event => this.editPostDetails(event)}
+            />
+            <br />
+            <input
+              value={details.body}
+              name="body"
+              onChange={event => this.editPostDetails(event)}
+            />
+            <br />
+            <button>Save</button>
+            <button onClick={() => this.setState({ isEditable: false })}>
+              Cancel
+            </button>
+          </form>
+        )}
+      </div>
+    );
+  }
+
   editPostDetails(event) {
     const { details } = this.state;
     const { name } = event.target;
@@ -64,45 +106,12 @@ class Post extends Component {
   }
 
   render() {
-    const { history } = this.props;
-    const { details, isEditable } = this.state;
-
-    const postHeader = !isEditable ? (
-      <div>
-        <h1>{details.title}</h1>
-        <h3>{details.body}</h3>
-        <UserActions
-          voteAction={vote => this.votePostAction(vote)}
-          editAction={() => this.setState({ isEditable: true })}
-          deleteAction={() =>
-            deletePost(details.id).then(() => history && history.goBack())
-          }
-        />
-      </div>
-    ) : (
-      <form onSubmit={() => this.submitPostDetails()}>
-        <input
-          value={details.title}
-          name="title"
-          onChange={event => this.editPostDetails(event)}
-        />
-        <br />
-        <input
-          value={details.body}
-          name="body"
-          onChange={event => this.editPostDetails(event)}
-        />
-        <br />
-        <button>Save</button>
-        <button onClick={() => this.setState({ isEditable: false })}>
-          Cancel
-        </button>
-      </form>
-    );
+    const { details } = this.state;
+    const postFields = this.getPostFields();
 
     return (
       <div>
-        {postHeader}
+        {postFields}
         <strong>Author: {details.author}</strong> <br />
         {`Comments: ${details.commentCount}, Votes: ${details.voteScore}`}
         <h3>Comments</h3>
