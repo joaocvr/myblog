@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Comment from "./Comment";
+import Comment from "./comment/Comment";
 import { voteComment, deleteComment, getPostComments } from "../api/API";
 
 class CommentsList extends Component {
@@ -10,29 +10,21 @@ class CommentsList extends Component {
   voteCommentAction(vote, id) {
     voteComment(vote, id).then(() => {
       const { comments } = this.state;
-      if (vote === "upVote") {
-        comments.map(c =>
-          c.id === id ? (c.voteScore = c.voteScore + 1) : c.voteScore
-        );
-      } else {
-        comments.map(c =>
-          c.id === id ? (c.voteScore = c.voteScore - 1) : c.voteScore
-        );
-      }
+      const voteEffect = vote === "upVote" ? 1 : -1;
+      comments.map(c =>
+        c.id === id ? (c.voteScore = c.voteScore + voteEffect) : c.voteScore
+      );
       this.setState({ comments });
     });
   }
 
   deleteCommentAction(id) {
     const { comments } = this.state;
-    const { updatePost } = this.props;
-    deleteComment(id)
-      .then(commentDeleted =>
-        this.setState({
-          comments: comments.filter(c => c.id !== commentDeleted.id)
-        })
-      )
-      .then(updatePost);
+    deleteComment(id).then(commentDeleted =>
+      this.setState({
+        comments: comments.filter(c => c.id !== commentDeleted.id)
+      })
+    );
   }
 
   componentDidUpdate(prevProps) {

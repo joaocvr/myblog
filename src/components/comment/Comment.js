@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import UserActions from "./UserActions";
-import { editComment } from "../api/API";
+import UserActions from "../UserActions";
+import { editComment } from "../../api/API";
 
 class Comment extends Component {
   state = {

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { BrowserRouter, Switch, Route, Link } from "react-router-dom";
 import Home from "./components/Home";
 import PostsPerCategory from "./components/PostsPerCategory";
-import Post from "./components/Post";
+import Post from "./components/post/Post";
 import NewPost from "./components/NewPost";
 import { getCategories } from "./api/API";
 import Error404 from "./components/Error404";

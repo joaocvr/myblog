@@ -1,4 +1,4 @@
-1. O App deve ter, no mínimo, 4 views (rotas) principais:
+(OK) 1. O App deve ter, no mínimo, 4 views (rotas) principais:
 
 (OK) 1.1 Home
         - lista todos os posts do servidor;
@@ -37,4 +37,4 @@
 
 8. Caso o REDUX seja utilizado, todos os dados lidos do servidor devem ser armazenados na Redux store, onde os componentes conectarão e obterão quaisquer informações que precisarem;
 8.1 As mudanças nestes dados devem ser feitas através de "actions" de redux.
-8.2 Estado de componentes controlados ou campos de formulários não deve ser colocado na Redux store.
+8.2 Estado de componentes controlados ou campos de formulários não devem ser colocados na Redux store.

@@ -1,10 +1,11 @@
 import React, { Component } from "react";
-import BackButton from "./BackButton";
-import UserActions from "./UserActions";
+import BackButton from "../BackButton";
 import { withRouter } from "react-router-dom";
-import { getPost, votePost, deletePost, editPost } from "../api/API";
-import CommentsList from "./CommentsList";
-import NewComment from "./NewComment";
+import { getPost, votePost, deletePost, editPost } from "../../api/API";
+import CommentsList from "../CommentsList";
+import NewComment from "../NewComment";
+import PostData from "./PostData";
+import EditPostForm from "./EditPostForm";
 
 class Post extends Component {
   state = {
@@ -13,46 +14,14 @@ class Post extends Component {
     isNewComment: false
   };
 
-  getPostFields() {
-    const { history } = this.props;
-    const { details, isEditable } = this.state;
+  toggleNewComment() {
+    const { isNewComment } = this.state;
+    this.setState({ isNewComment: !isNewComment });
+  }
 
-    return (
-      <div>
-        {!isEditable ? (
-          <div>
-            <h1>{details.title}</h1>
-            <h3>{details.body}</h3>
-            <UserActions
-              voteAction={vote => this.votePostAction(vote)}
-              editAction={() => this.setState({ isEditable: true })}
-              deleteAction={() =>
-                deletePost(details.id).then(() => history && history.goBack())
-              }
-            />
-          </div>
-        ) : (
-          <form onSubmit={() => this.submitPostDetails()}>
-            <input
-              value={details.title}
-              name="title"
-              onChange={event => this.editPostDetails(event)}
-            />
-            <br />
-            <input
-              value={details.body}
-              name="body"
-              onChange={event => this.editPostDetails(event)}
-            />
-            <br />
-            <button>Save</button>
-            <button onClick={() => this.setState({ isEditable: false })}>
-              Cancel
-            </button>
-          </form>
-        )}
-      </div>
-    );
+  toggleEditPost() {
+    const { isEditable } = this.state;
+    this.setState({ isEditable: !isEditable });
   }
 
   editPostDetails(event) {
@@ -108,29 +77,40 @@ class Post extends Component {
   }
 
   render() {
-    const { details, isNewComment } = this.state;
-    const postFields = this.getPostFields();
+    const { history } = this.props;
+    const { details, isEditable, isNewComment } = this.state;
+
     return (
       <div>
-        {postFields}
+        {!isEditable ? (
+          <PostData
+            details={details}
+            voteAction={vote => this.votePostAction(vote)}
+            editAction={() => this.toggleEditPost()}
+            deleteAction={() =>
+              deletePost(details.id).then(() => history && history.goBack())
+            }
+          />
+        ) : (
+          <EditPostForm
+            onSubmit={() => this.submitPostDetails()}
+            onChange={event => this.editPostDetails(event)}
+            onClick={() => this.toggleEditPost()}
+          />
+        )}
         <strong>Author: {details.author}</strong> <br />
         {`Comments: ${details.commentCount}, Votes: ${details.voteScore}`}
         <h3>Comments</h3>
         {isNewComment ? (
           <NewComment
-            close={() => this.setState({ isNewComment: false })}
+            close={() => this.toggleNewComment()}
             postId={details.id}
           />
         ) : (
-          <button onClick={() => this.setState({ isNewComment: true })}>
-            New comment
-          </button>
+          <button onClick={() => this.toggleNewComment()}>New comment</button>
         )}
         <br />
-        <CommentsList
-          postId={details.id}
-          updatePost={() => this.updatePost(details.id)}
-        />
+        <CommentsList postId={details.id} />
         <BackButton />
       </div>
     );
