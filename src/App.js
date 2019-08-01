@@ -1,37 +1,27 @@
 import React, { Component } from "react";
 import { BrowserRouter, Switch, Route, Link } from "react-router-dom";
+import { connect } from "react-redux";
 import Home from "./components/Home";
 import PostsPerCategory from "./components/PostsPerCategory";
 import Post from "./components/post/Post";
 import NewPost from "./components/NewPost";
-import { getCategories } from "./api/API";
 import Error404 from "./components/Error404";
+import Categories from "./categories/index";
+import { fetchingCategories } from "./categories/actions";
 
 class App extends Component {
-  state = {
-    categories: []
-  };
-
   componentDidMount() {
-    getCategories().then(categories => this.setState({ categories }));
+    this.props.fetchingCategories();
   }
 
   render() {
-    const { categories } = this.state;
+    const { categories } = this.props;
+    console.log("App", "render", "categories", categories);
     return (
       <BrowserRouter>
         <div>
           <Link to={"/"}>Home</Link>
-          <div className="Menu">
-            <ul>
-              {categories &&
-                categories.map(cat => (
-                  <Link to={`/${cat.path}`} key={cat.path}>
-                    <li>{cat.name}</li>
-                  </Link>
-                ))}
-            </ul>
-          </div>
+          <Categories categories={categories} />
           <Switch>
             <Route exact path="/" component={Home} />
             <Route
@@ -53,4 +43,22 @@ class App extends Component {
   }
 }
 
-export default App;
+const mapStateToProps = state => {
+  return {
+    categories: state.categories,
+    loading: state.loading
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    fetchingCategories: () => {
+      dispatch(fetchingCategories());
+    }
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App);
