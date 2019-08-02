@@ -3,6 +3,7 @@ import BackButton from "./BackButton";
 import uuid from "uuid";
 import { addNewPost } from "../api/API";
 import { withRouter } from "react-router-dom";
+import { connect } from "react-redux";
 
 class NewPost extends Component {
   state = {
@@ -84,4 +85,15 @@ class NewPost extends Component {
   }
 }
 
-export default withRouter(NewPost);
+const mapStateToProps = state => {
+  return {
+    categories: state.categories
+  };
+};
+
+export default withRouter(
+  connect(
+    mapStateToProps,
+    null
+  )(NewPost)
+);

@@ -6,12 +6,20 @@ import thunk from "redux-thunk";
 import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
-import { categoriesReducer, loadingReducer } from "./categories/reducer";
+import {
+  categoriesReducer,
+  loadingReducer
+} from "./components/categories/reducer";
+import { postsReducer } from "./components/post/reducer";
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const store = createStore(
-  combineReducers({ categories: categoriesReducer, loading: loadingReducer }),
+  combineReducers({
+    categories: categoriesReducer,
+    loading: loadingReducer,
+    posts: postsReducer
+  }),
   composeEnhancers(applyMiddleware(thunk))
 );
 

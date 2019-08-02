@@ -6,35 +6,30 @@ import PostsPerCategory from "./components/PostsPerCategory";
 import Post from "./components/post/Post";
 import NewPost from "./components/NewPost";
 import Error404 from "./components/Error404";
-import Categories from "./categories/index";
-import { fetchingCategories } from "./categories/actions";
+import Categories from "./components/categories/index";
+import { fetchingCategories } from "./components/categories/actions";
+import { fetchingPosts } from "./components/post/actions";
 
 class App extends Component {
   componentDidMount() {
     this.props.fetchingCategories();
+    this.props.fetchingPosts();
   }
 
   render() {
-    const { categories } = this.props;
-    console.log("App", "render", "categories", categories);
     return (
       <BrowserRouter>
         <div>
           <Link to={"/"}>Home</Link>
-          <Categories categories={categories} />
+          <Categories />
           <Switch>
             <Route exact path="/" component={Home} />
-            <Route
-              path="/newPost"
-              render={props => <NewPost {...props} categories={categories} />}
-            />
+            <Route path="/newPost" render={props => <NewPost {...props} />} />
             <Route path="/error404" component={Error404} />
             <Route path="/:categoria/:postId" component={Post} />
             <Route
               path="/:category"
-              render={props => (
-                <PostsPerCategory {...props} categories={categories} />
-              )}
+              render={props => <PostsPerCategory {...props} />}
             />
           </Switch>
         </div>
@@ -54,6 +49,9 @@ const mapDispatchToProps = dispatch => {
   return {
     fetchingCategories: () => {
       dispatch(fetchingCategories());
+    },
+    fetchingPosts: () => {
+      dispatch(fetchingPosts());
     }
   };
 };

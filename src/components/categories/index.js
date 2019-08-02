@@ -3,8 +3,6 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 
 const Categories = ({ categories }) => {
-  console.log("Categories", "categories", categories);
-
   return (
     <div className="Menu">
       <ul>
@@ -19,4 +17,13 @@ const Categories = ({ categories }) => {
   );
 };
 
-export default connect()(Categories);
+const mapStateToProps = state => {
+  return {
+    categories: state.categories
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  null
+)(Categories);
