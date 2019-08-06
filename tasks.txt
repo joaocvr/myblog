@@ -25,7 +25,7 @@
         2.2 Conter (ou "ser") um link para a sua página de detalhes;
         2.3 Conter botões para votar contra, votar a favor, remover e editar o post;
 
-=> 3. Toda página de listagem deve conter um mecanismo para ordenar os post por data ou por vote score;
+(OK) 3. Toda página de listagem deve conter um mecanismo para ordenar os post por data ou por vote score;
 
 (OK) 4. Deve ser possível para o usuário navegar para todas as páginas da aplicação sem a necessidade de digitar um URL;
 

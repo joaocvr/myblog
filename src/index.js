@@ -18,7 +18,7 @@ const store = createStore(
   combineReducers({
     categories: categoriesReducer,
     loading: loadingReducer,
-    posts: postsReducer
+    allPosts: postsReducer
   }),
   composeEnhancers(applyMiddleware(thunk))
 );

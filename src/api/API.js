@@ -108,14 +108,14 @@ export const editPost = async post => {
     .then(data => data);
 };
 
-export const addNewPost = async post => {
+export const addNewPost = async newPost => {
   fetch(`${API_URL}/posts`, {
     method: "POST",
     headers: {
       ...headers,
       "Content-Type": "application/json"
     },
-    body: JSON.stringify(post)
+    body: JSON.stringify(newPost)
   })
     .then(res => res.json())
     .then(data => data);

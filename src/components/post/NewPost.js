@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import BackButton from "./BackButton";
+import BackButton from "../BackButton";
 import uuid from "uuid";
-import { addNewPost } from "../api/API";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
+import { addingNewPost } from "./actions";
 
 class NewPost extends Component {
   state = {
@@ -21,10 +21,9 @@ class NewPost extends Component {
     e.preventDefault();
     const { title, body, author } = this.state;
     if (title && body && author) {
-      addNewPost({ ...this.state }).then(() => {
-        const { history } = this.props;
-        history.push("/");
-      });
+      this.props.addingNewPost({ ...this.state });
+      const { history } = this.props;
+      history.push("/");
     } else {
       alert("You need to fullfill all the fields.");
     }
@@ -91,9 +90,17 @@ const mapStateToProps = state => {
   };
 };
 
+const mapDispatchToProps = dispatch => {
+  return {
+    addingNewPost: newPost => {
+      dispatch(addingNewPost(newPost));
+    }
+  };
+};
+
 export default withRouter(
   connect(
     mapStateToProps,
-    null
+    mapDispatchToProps
   )(NewPost)
 );

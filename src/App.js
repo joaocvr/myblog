@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import Home from "./components/Home";
 import PostsPerCategory from "./components/PostsPerCategory";
 import Post from "./components/post/Post";
-import NewPost from "./components/NewPost";
+import NewPost from "./components/post/NewPost";
 import Error404 from "./components/Error404";
 import Categories from "./components/categories/index";
 import { fetchingCategories } from "./components/categories/actions";
