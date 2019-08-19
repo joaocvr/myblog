@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PostsList from "./PostsList";
-import BackButton from "./BackButton";
-import { getPostsPerCategories } from "../api/API";
+import BackButton from "../utils/BackButton";
+import { getPostsPerCategories } from "../../api/API";
 import { withRouter } from "react-router";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
@@ -44,15 +44,8 @@ class PostsPerCategory extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    categories: state.categories
-  };
+const mapStateToProps = ({ categories }) => {
+  return { categories };
 };
 
-export default withRouter(
-  connect(
-    mapStateToProps,
-    null
-  )(PostsPerCategory)
-);
+export default withRouter(connect(mapStateToProps)(PostsPerCategory));

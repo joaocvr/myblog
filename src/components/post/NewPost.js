@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import BackButton from "../BackButton";
+import BackButton from "../utils/BackButton";
 import uuid from "uuid";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
@@ -21,8 +21,8 @@ class NewPost extends Component {
     e.preventDefault();
     const { title, body, author } = this.state;
     if (title && body && author) {
-      this.props.addingNewPost({ ...this.state });
-      const { history } = this.props;
+      const { addingNewPost, history } = this.props;
+      addingNewPost({ ...this.state });
       history.push("/");
     } else {
       alert("You need to fullfill all the fields.");
@@ -84,11 +84,7 @@ class NewPost extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    categories: state.categories
-  };
-};
+const mapStateToProps = ({ categories }) => categories;
 
 const mapDispatchToProps = dispatch => {
   return {

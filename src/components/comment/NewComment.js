@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Modal from "react-awesome-modal";
-import { addNewComment } from "../api/API";
 import uuid from "uuid";
+import { addNewComment } from "../../api/API";
 
 class NewComment extends Component {
   state = {
@@ -23,9 +23,9 @@ class NewComment extends Component {
 
   submitNewComment(e) {
     e.preventDefault();
+
     const { postId } = this.props;
     const { body, author } = this.state;
-
     if (body && author) {
       addNewComment({
         id: uuid.v4(),

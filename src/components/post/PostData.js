@@ -1,5 +1,5 @@
 import React from "react";
-import UserActions from "../UserActions";
+import UserActions from "../utils/UserActions";
 
 const PostData = ({ details, voteAction, editAction, deleteAction }) => {
   return (

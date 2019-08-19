@@ -1,16 +1,13 @@
 import { getCategories } from "../../api/API";
 
-function fetchedCategories(categories) {
-  return { type: "FETCHED_CATEGORIES", categories };
-}
+export const FETCHED_CATEGORIES = "FETCHED_CATEGORIES";
 
-function loadingCategories() {
-  return { type: "LOADING_CATEGORIES" };
+function fetchedCategories(categories) {
+  return { type: FETCHED_CATEGORIES, categories };
 }
 
 function fetchingCategories() {
   return dispatch => {
-    dispatch(loadingCategories());
     getCategories().then(categories => {
       dispatch(fetchedCategories(categories));
     });

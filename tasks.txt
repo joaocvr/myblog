@@ -1,3 +1,7 @@
+Dúvidas:
+1) Devo tirar o acesso à API em "PostsPerCategory" e substituir por acesso ao "allPosts" da redux store (filtrando pela categoria escolhida?
+
+
 (OK) 1. O App deve ter, no mínimo, 4 views (rotas) principais:
 
 (OK) 1.1 Home

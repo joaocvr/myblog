@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import UserActions from "../UserActions";
+import UserActions from "../utils/UserActions";
 import { editComment } from "../../api/API";
 
 class Comment extends Component {

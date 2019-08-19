@@ -1,6 +1,8 @@
 import React, { Component } from "react";
-import Comment from "./comment/Comment";
-import { voteComment, deleteComment, getPostComments } from "../api/API";
+import { connect } from "react-redux";
+import Comment from "./Comment";
+import { voteComment, deleteComment } from "../../api/API";
+import { fetchingComments } from "./actions";
 
 class CommentsList extends Component {
   state = {
@@ -27,10 +29,31 @@ class CommentsList extends Component {
     );
   }
 
+  componentDidMount() {
+    const { postId, fetchingComments } = this.props;
+    console.log("CommentsList", "componentDidMount", "postId", postId);
+    console.log(
+      "CommentsList",
+      "componentDidMount",
+      "fetchingComments",
+      fetchingComments
+    );
+    fetchingComments(postId).then(comments => {
+      this.setState({ comments });
+    });
+  }
+
   componentDidUpdate(prevProps) {
-    const { postId } = this.props;
+    const { postId, fetchingComments } = this.props;
+    console.log("CommentsList", "componentDidUpdate", "postId", postId);
+    console.log(
+      "CommentsList",
+      "componentDidUpdate",
+      "fetchingComments",
+      fetchingComments
+    );
     if (postId !== prevProps.postId) {
-      getPostComments(postId).then(comments => {
+      fetchingComments(postId).then(comments => {
         this.setState({ comments });
       });
     }
@@ -61,4 +84,15 @@ class CommentsList extends Component {
   }
 }
 
-export default CommentsList;
+const mapDispatchToProps = dispatch => {
+  return {
+    fetchingComments: async postId => {
+      dispatch(fetchingComments(postId));
+    }
+  };
+};
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(CommentsList);

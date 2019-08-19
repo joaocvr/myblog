@@ -1,5 +1,5 @@
 import React from "react";
-import PostsList from "./PostsList";
+import PostsList from "../post/PostsList";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 

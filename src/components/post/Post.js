@@ -1,11 +1,13 @@
 import React, { Component } from "react";
-import BackButton from "../BackButton";
 import { withRouter } from "react-router-dom";
-import { getPost, votePost, deletePost, editPost } from "../../api/API";
-import CommentsList from "../CommentsList";
-import NewComment from "../NewComment";
+import { connect } from "react-redux";
+import BackButton from "../utils/BackButton";
+import { getPost, votePost, editPost } from "../../api/API";
+import CommentsList from "../comment/CommentsList";
+import NewComment from "../comment/NewComment";
 import PostData from "./PostData";
 import EditPostForm from "./EditPostForm";
+import { deletingPost } from "./actions";
 
 class Post extends Component {
   state = {
@@ -42,11 +44,11 @@ class Post extends Component {
   updatePost(postId) {
     getPost(postId).then(details => {
       const { history } = this.props;
-      const { categoria } = this.props.match.params;
+      const { category } = this.props.match.params;
       if (
         Object.keys(details).length === 0 ||
         details.error ||
-        categoria !== details.category
+        category !== details.category
       ) {
         history.push("/error404");
       } else {
@@ -77,7 +79,7 @@ class Post extends Component {
   }
 
   render() {
-    const { history } = this.props;
+    const { history, deletingPost } = this.props;
     const { details, isEditable, isNewComment } = this.state;
 
     return (
@@ -88,11 +90,12 @@ class Post extends Component {
             voteAction={vote => this.votePostAction(vote)}
             editAction={() => this.toggleEditPost()}
             deleteAction={() =>
-              deletePost(details.id).then(() => history && history.goBack())
+              deletingPost(details.id).then(() => history && history.goBack())
             }
           />
         ) : (
           <EditPostForm
+            details={details}
             onSubmit={() => this.submitPostDetails()}
             onChange={event => this.editPostDetails(event)}
             onClick={() => this.toggleEditPost()}
@@ -117,4 +120,17 @@ class Post extends Component {
   }
 }
 
-export default withRouter(Post);
+const mapDispatchToProps = dispatch => {
+  return {
+    deletingPost: async postId => {
+      dispatch(deletingPost(postId));
+    }
+  };
+};
+
+export default withRouter(
+  connect(
+    null,
+    mapDispatchToProps
+  )(Post)
+);

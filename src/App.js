@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import { BrowserRouter, Switch, Route, Link } from "react-router-dom";
 import { connect } from "react-redux";
-import Home from "./components/Home";
-import PostsPerCategory from "./components/PostsPerCategory";
+import Home from "./components/home/Home";
+import PostsPerCategory from "./components/post/PostsPerCategory";
 import Post from "./components/post/Post";
 import NewPost from "./components/post/NewPost";
-import Error404 from "./components/Error404";
+import Error404 from "./components/error/Error404";
 import Categories from "./components/categories/index";
 import { fetchingCategories } from "./components/categories/actions";
 import { fetchingPosts } from "./components/post/actions";
@@ -40,8 +40,7 @@ class App extends Component {
 
 const mapStateToProps = state => {
   return {
-    categories: state.categories,
-    loading: state.loading
+    categories: state.categories
   };
 };
 
