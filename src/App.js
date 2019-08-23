@@ -26,7 +26,7 @@ class App extends Component {
             <Route exact path="/" component={Home} />
             <Route path="/newPost" render={props => <NewPost {...props} />} />
             <Route path="/error404" component={Error404} />
-            <Route path="/:categoria/:postId" component={Post} />
+            <Route path="/:category/:postId" component={Post} />
             <Route
               path="/:category"
               render={props => <PostsPerCategory {...props} />}
@@ -38,10 +38,8 @@ class App extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    categories: state.categories
-  };
+const mapStateToProps = ({ categories }) => {
+  return { categories };
 };
 
 const mapDispatchToProps = dispatch => {

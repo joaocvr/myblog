@@ -1,66 +1,23 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import Comment from "./Comment";
-import { voteComment, deleteComment } from "../../api/API";
-import { fetchingComments } from "./actions";
+import { fetchingComments, votingComment, deletingComment } from "./actions";
 
 class CommentsList extends Component {
-  state = {
-    comments: []
-  };
-
-  voteCommentAction(vote, id) {
-    voteComment(vote, id).then(() => {
-      const { comments } = this.state;
-      const voteEffect = vote === "upVote" ? 1 : -1;
-      comments.map(c =>
-        c.id === id ? (c.voteScore = c.voteScore + voteEffect) : c.voteScore
-      );
-      this.setState({ comments });
-    });
-  }
-
-  deleteCommentAction(id) {
-    const { comments } = this.state;
-    deleteComment(id).then(commentDeleted =>
-      this.setState({
-        comments: comments.filter(c => c.id !== commentDeleted.id)
-      })
-    );
-  }
-
   componentDidMount() {
     const { postId, fetchingComments } = this.props;
-    console.log("CommentsList", "componentDidMount", "postId", postId);
-    console.log(
-      "CommentsList",
-      "componentDidMount",
-      "fetchingComments",
-      fetchingComments
-    );
-    fetchingComments(postId).then(comments => {
-      this.setState({ comments });
-    });
+    fetchingComments(postId);
   }
 
   componentDidUpdate(prevProps) {
     const { postId, fetchingComments } = this.props;
-    console.log("CommentsList", "componentDidUpdate", "postId", postId);
-    console.log(
-      "CommentsList",
-      "componentDidUpdate",
-      "fetchingComments",
-      fetchingComments
-    );
     if (postId !== prevProps.postId) {
-      fetchingComments(postId).then(comments => {
-        this.setState({ comments });
-      });
+      fetchingComments(postId);
     }
   }
 
   render() {
-    const { comments } = this.state;
+    const { comments, votingComment, deletingComment } = this.props;
     return (
       <div>
         <ul>
@@ -72,8 +29,8 @@ class CommentsList extends Component {
                   <li key={c.id}>
                     <Comment
                       comment={c}
-                      voteAction={vote => this.voteCommentAction(vote, c.id)}
-                      deleteAction={() => this.deleteCommentAction(c.id)}
+                      voteAction={vote => votingComment(vote, c.id)}
+                      deleteAction={() => deletingComment(c.id)}
                     />
                   </li>
                 );
@@ -84,15 +41,25 @@ class CommentsList extends Component {
   }
 }
 
+const mapStateToProps = ({ comments }) => {
+  return { comments };
+};
+
 const mapDispatchToProps = dispatch => {
   return {
     fetchingComments: async postId => {
       dispatch(fetchingComments(postId));
+    },
+    votingComment: (vote, commentId) => {
+      dispatch(votingComment(vote, commentId));
+    },
+    deletingComment: commentId => {
+      dispatch(deletingComment(commentId));
     }
   };
 };
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(CommentsList);

@@ -84,7 +84,9 @@ class NewPost extends Component {
   }
 }
 
-const mapStateToProps = ({ categories }) => categories;
+const mapStateToProps = ({ categories }) => {
+  return { categories };
+};
 
 const mapDispatchToProps = dispatch => {
   return {
