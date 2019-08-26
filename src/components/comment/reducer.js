@@ -1,8 +1,6 @@
 import { VOTED_COMMENT, FETCHED_COMMENTS, DELETED_COMMENT } from "./actions";
 
 export const commentsReducer = (state = [], action) => {
-  console.log("commentsReducer", "state", state);
-  console.log("commentsReducer", "action", action);
   switch (action.type) {
     case FETCHED_COMMENTS:
       return action.comments;
