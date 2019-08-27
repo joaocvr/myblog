@@ -4,8 +4,6 @@ import { connect } from "react-redux";
 import { sortingPosts } from "./actions";
 
 const PostsList = ({ posts, sortingPosts }) => {
-  console.log("PostsList", "posts", posts);
-
   return (
     <div>
       <button onClick={() => sortingPosts("timestamp")}>Order per date</button>

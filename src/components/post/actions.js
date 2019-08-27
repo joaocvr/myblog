@@ -22,7 +22,6 @@ function deletedPost(postId) {
 }
 
 const sortingPosts = sortBy => dispatch => {
-  console.log("post - action", "sortBy", sortBy);
   dispatch(sortedPosts(sortBy));
 };
 

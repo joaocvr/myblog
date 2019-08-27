@@ -6,8 +6,6 @@ import {
 } from "./actions";
 
 export const postsReducer = (state = [], action) => {
-  console.log("postsReducer", "state", state);
-  console.log("postsReducer", "action", action);
   switch (action.type) {
     case FETCHED_POSTS:
       return action.allPosts;
@@ -20,10 +18,9 @@ export const postsReducer = (state = [], action) => {
 
     case SORTED_POSTS: {
       const { sortBy } = action;
-      console.log("postsReducer", "SORTED_POSTS");
-      return state.sort((postA, postB) =>
-        postA[sortBy] > postB[sortBy] ? 0 : 1
-      );
+      return state
+        .slice()
+        .sort((postA, postB) => (postA[sortBy] > postB[sortBy] ? 0 : 1));
     }
 
     default:
