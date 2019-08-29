@@ -79,7 +79,7 @@ class Post extends Component {
   }
 
   render() {
-    const { history, deletingPost } = this.props;
+    const { history, deletingPost, comments } = this.props;
     const { details, isEditable, isNewComment } = this.state;
 
     return (
@@ -102,7 +102,9 @@ class Post extends Component {
           />
         )}
         <strong>Author: {details.author}</strong> <br />
-        {`Comments: ${details.commentCount}, Votes: ${details.voteScore}`}
+        {`Comments: ${
+          comments.filter(c => c.deleted === false).length
+        }, Votes: ${details.voteScore}`}
         <h3>Comments</h3>
         {isNewComment ? (
           <NewComment
@@ -120,6 +122,12 @@ class Post extends Component {
   }
 }
 
+const mapStateToProps = ({ comments }, { history, deletingPost }) => ({
+  comments,
+  history,
+  deletingPost
+});
+
 const mapDispatchToProps = dispatch => {
   return {
     deletingPost: async postId => {
@@ -130,7 +138,7 @@ const mapDispatchToProps = dispatch => {
 
 export default withRouter(
   connect(
-    null,
+    mapStateToProps,
     mapDispatchToProps
   )(Post)
 );

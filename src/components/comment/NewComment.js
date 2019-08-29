@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import Modal from "react-awesome-modal";
 import uuid from "uuid";
-import { addNewComment } from "../../api/API";
+import { connect } from "react-redux";
+import { addingNewComment } from "./actions";
 
 class NewComment extends Component {
   state = {
@@ -24,19 +25,20 @@ class NewComment extends Component {
   submitNewComment(e) {
     e.preventDefault();
 
-    const { postId } = this.props;
+    const { postId, addingNewComment } = this.props;
     const { body, author } = this.state;
     if (body && author) {
-      addNewComment({
+      addingNewComment({
         id: uuid.v4(),
         timestamp: Date.now(),
         body,
         author,
         deleted: false,
-        parentId: postId
+        parentId: postId,
+        voteScore: 0
       }).then(() => this.closeModal());
     } else {
-      alert("You need to fullfill all the fields.");
+      alert("You must fullfill all the fields.");
     }
   }
 
@@ -72,4 +74,15 @@ class NewComment extends Component {
   }
 }
 
-export default NewComment;
+const mapDispatchToProps = dispatch => {
+  return {
+    addingNewComment: async newComment => {
+      dispatch(addingNewComment(newComment));
+    }
+  };
+};
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(NewComment);

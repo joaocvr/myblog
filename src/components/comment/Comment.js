@@ -43,7 +43,6 @@ class Comment extends Component {
   render() {
     const { comment, voteAction, deleteAction } = this.props;
     const { commentBodyState, isEditable } = this.state;
-
     return (
       <div>
         {isEditable ? (

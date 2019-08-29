@@ -18,11 +18,9 @@ const PostsList = ({ posts, sortingPosts }) => {
                 <Link to={`/${p.category}/${p.id}`}>
                   <strong>
                     {p.title} (
-                    {`${p.commentCount} comments, ${
-                      p.voteScore
-                    } score votes, ${new Date(p.timestamp).toLocaleDateString(
-                      "pt-BR"
-                    )}`}
+                    {`${p.voteScore} score votes, ${new Date(
+                      p.timestamp
+                    ).toLocaleDateString("pt-BR")}`}
                     )
                   </strong>
                 </Link>
@@ -38,15 +36,7 @@ const PostsList = ({ posts, sortingPosts }) => {
   );
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    sortingPosts: sortBy => {
-      dispatch(sortingPosts(sortBy));
-    }
-  };
-};
-
 export default connect(
   null,
-  mapDispatchToProps
+  { sortingPosts }
 )(PostsList);

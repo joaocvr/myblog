@@ -1,4 +1,9 @@
-import { VOTED_COMMENT, FETCHED_COMMENTS, DELETED_COMMENT } from "./actions";
+import {
+  VOTED_COMMENT,
+  FETCHED_COMMENTS,
+  DELETED_COMMENT,
+  ADDED_COMMENT
+} from "./actions";
 
 export const commentsReducer = (state = [], action) => {
   switch (action.type) {
@@ -18,6 +23,10 @@ export const commentsReducer = (state = [], action) => {
       return state.map(
         c => (c = c.id === commentId ? { ...c, deleted: true } : c)
       );
+    }
+
+    case ADDED_COMMENT: {
+      return [...state, action.newComment];
     }
 
     default:
