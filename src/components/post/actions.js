@@ -1,9 +1,16 @@
-import { getAllPosts, addNewPost, deletePost } from "../../api/API";
+import {
+  getAllPosts,
+  addNewPost,
+  deletePost,
+  editPost,
+  votePost
+} from "../../api/API";
 
 export const FETCHED_POSTS = "FETCHED_POSTS";
 export const ADDED_NEW_POST = "ADDED_NEW_POST";
 export const DELETED_POST = "DELETED_POST";
 export const SORTED_POSTS = "SORTED_POSTS";
+export const EDITED_POST = "EDITED_POST";
 
 function fetchedPosts(allPosts) {
   return { type: FETCHED_POSTS, allPosts };
@@ -19,6 +26,10 @@ function sortedPosts(sortBy) {
 
 function deletedPost(postId) {
   return { type: DELETED_POST, postId };
+}
+
+function editedPost(editedPost) {
+  return { type: EDITED_POST, editedPost };
 }
 
 const sortingPosts = sortBy => dispatch => {
@@ -43,4 +54,30 @@ const deletingPost = postId => dispatch => {
   });
 };
 
-export { fetchingPosts, addingNewPost, deletingPost, sortingPosts };
+const editingPost = postEdited => dispatch => {
+  editPost(postEdited).then(() => {
+    dispatch(editedPost(postEdited));
+  });
+};
+
+const votingPost = (vote, post) => dispatch => {
+  console.log("votingPost", "vote", vote);
+  console.log("votingPost", "post", post);
+  const { id } = post;
+  votePost(vote, id).then(() => {
+    if (vote === "upVote") {
+      dispatch(editedPost({ ...post, voteScore: post.voteScore + 1 }));
+    } else {
+      dispatch(editedPost({ ...post, voteScore: post.voteScore - 1 }));
+    }
+  });
+};
+
+export {
+  fetchingPosts,
+  addingNewPost,
+  deletingPost,
+  sortingPosts,
+  editingPost,
+  votingPost
+};

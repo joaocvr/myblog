@@ -2,7 +2,8 @@ import {
   FETCHED_POSTS,
   DELETED_POST,
   ADDED_NEW_POST,
-  SORTED_POSTS
+  SORTED_POSTS,
+  EDITED_POST
 } from "./actions";
 
 export const postsReducer = (state = [], action) => {
@@ -21,6 +22,11 @@ export const postsReducer = (state = [], action) => {
       return state
         .slice()
         .sort((postA, postB) => (postA[sortBy] > postB[sortBy] ? 0 : 1));
+    }
+
+    case EDITED_POST: {
+      const { editedPost } = action;
+      return state.map(p => (p.id === editedPost.id ? editedPost : p));
     }
 
     default:

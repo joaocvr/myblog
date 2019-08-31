@@ -2,16 +2,14 @@ import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import BackButton from "../utils/BackButton";
-import { getPost, votePost, editPost } from "../../api/API";
 import CommentsList from "../comment/CommentsList";
 import NewComment from "../comment/NewComment";
 import PostData from "./PostData";
 import EditPostForm from "./EditPostForm";
-import { deletingPost } from "./actions";
+import { deletingPost, editingPost, votingPost } from "./actions";
 
 class Post extends Component {
   state = {
-    details: {},
     isEditable: false,
     isNewComment: false
   };
@@ -27,111 +25,99 @@ class Post extends Component {
   }
 
   editPostDetails(event) {
-    const { details } = this.state;
-    const { name } = event.target;
-    if (name === "body") {
-      this.setState({ details: { ...details, body: event.target.value } });
-    } else {
-      this.setState({ details: { ...details, title: event.target.value } });
-    }
+    // const { post } = this.props;
+    // const { name, value } = event.target;
+    // if (name === "body") {
+    //   this.setState({ details: { ...details, body: value } });
+    // } else {
+    //   this.setState({ details: { ...details, title: value } });
+    // }
   }
 
   submitPostDetails() {
-    const { details } = this.state;
-    editPost(details).then(() => this.setState({ isEditable: false }));
-  }
-
-  updatePost(postId) {
-    getPost(postId).then(details => {
-      const { history } = this.props;
-      const { category } = this.props.match.params;
-      if (
-        Object.keys(details).length === 0 ||
-        details.error ||
-        category !== details.category
-      ) {
-        history.push("/error404");
-      } else {
-        this.setState({ details });
-      }
-    });
+    const { editingPost, post } = this.props;
+    editingPost(post).then(() => this.setState({ isEditable: false }));
   }
 
   votePostAction(vote) {
-    const { details } = this.state;
-    const { id } = details;
-    votePost(vote, id).then(() => {
-      if (vote === "upVote") {
-        this.setState({
-          details: { ...details, voteScore: details.voteScore + 1 }
-        });
-      } else {
-        this.setState({
-          details: { ...details, voteScore: details.voteScore - 1 }
-        });
-      }
-    });
+    const { votingPost, post } = this.props;
+    votingPost(vote, post);
   }
 
   componentDidMount() {
-    const { postId } = this.props.match.params;
-    this.updatePost(postId);
+    const { category } = this.props.match.params;
+    const { post, history } = this.props;
+    post === null || category !== post.category
+      ? history.push("/error404")
+      : this.setState({ ...this.state, details: post });
   }
 
   render() {
-    const { history, deletingPost, comments } = this.props;
-    const { details, isEditable, isNewComment } = this.state;
+    const { history, deletingPost, comments, post } = this.props;
+    const { isEditable, isNewComment } = this.state;
 
+    console.log("Post", "render", "post", post);
     return (
       <div>
         {!isEditable ? (
           <PostData
-            details={details}
+            details={post}
             voteAction={vote => this.votePostAction(vote)}
             editAction={() => this.toggleEditPost()}
             deleteAction={() =>
-              deletingPost(details.id).then(() => history && history.goBack())
+              deletingPost(post.id).then(() => history && history.goBack())
             }
           />
         ) : (
           <EditPostForm
-            details={details}
+            details={post}
             onSubmit={() => this.submitPostDetails()}
             onChange={event => this.editPostDetails(event)}
             onClick={() => this.toggleEditPost()}
           />
         )}
-        <strong>Author: {details.author}</strong> <br />
+        <strong>Author: {post.author}</strong> <br />
         {`Comments: ${
           comments.filter(c => c.deleted === false).length
-        }, Votes: ${details.voteScore}`}
+        }, Votes: ${post.voteScore}`}
         <h3>Comments</h3>
         {isNewComment ? (
-          <NewComment
-            close={() => this.toggleNewComment()}
-            postId={details.id}
-          />
+          <NewComment close={() => this.toggleNewComment()} postId={post.id} />
         ) : (
           <button onClick={() => this.toggleNewComment()}>New comment</button>
         )}
         <br />
-        <CommentsList postId={details.id} />
+        <CommentsList postId={post.id} />
         <BackButton />
       </div>
     );
   }
 }
 
-const mapStateToProps = ({ comments }, { history, deletingPost }) => ({
-  comments,
-  history,
-  deletingPost
-});
+const mapStateToProps = (
+  { comments, allPosts },
+  { history, deletingPost, match }
+) => {
+  const { postId } = match.params;
+  const post = allPosts.find(p => p.id === postId);
+  return {
+    comments,
+    history,
+    deletingPost,
+    post
+  };
+};
 
 const mapDispatchToProps = dispatch => {
   return {
     deletingPost: async postId => {
       dispatch(deletingPost(postId));
+    },
+    editingPost: async editedPost => {
+      dispatch(editingPost(editedPost));
+    },
+    votingPost: async (vote, post) => {
+      dispatch(votingPost(vote, post));
     }
   };
 };
