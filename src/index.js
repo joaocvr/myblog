@@ -9,6 +9,8 @@ import * as serviceWorker from "./serviceWorker";
 import { categoriesReducer } from "./components/categories/reducer";
 import { postsReducer } from "./components/post/reducer";
 import { commentsReducer } from "./components/comment/reducer";
+import { fetchingPosts } from "./components/post/actions";
+import { fetchingCategories } from "./components/categories/actions";
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
@@ -20,6 +22,9 @@ const store = createStore(
   }),
   composeEnhancers(applyMiddleware(thunk))
 );
+
+store.dispatch(fetchingCategories());
+store.dispatch(fetchingPosts());
 
 render(
   <Provider store={store}>

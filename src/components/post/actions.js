@@ -61,8 +61,6 @@ const editingPost = postEdited => dispatch => {
 };
 
 const votingPost = (vote, post) => dispatch => {
-  console.log("votingPost", "vote", vote);
-  console.log("votingPost", "post", post);
   const { id } = post;
   votePost(vote, id).then(() => {
     if (vote === "upVote") {

@@ -7,11 +7,13 @@ import NewComment from "../comment/NewComment";
 import PostData from "./PostData";
 import EditPostForm from "./EditPostForm";
 import { deletingPost, editingPost, votingPost } from "./actions";
+import { getPost } from "../../api/API";
 
 class Post extends Component {
   state = {
     isEditable: false,
-    isNewComment: false
+    isNewComment: false,
+    details: {}
   };
 
   toggleNewComment() {
@@ -25,86 +27,103 @@ class Post extends Component {
   }
 
   editPostDetails(event) {
-    // const { post } = this.props;
-    // const { name, value } = event.target;
-    // if (name === "body") {
-    //   this.setState({ details: { ...details, body: value } });
-    // } else {
-    //   this.setState({ details: { ...details, title: value } });
-    // }
+    const { details } = this.state;
+    const { name, value } = event.target;
+    if (name === "body") {
+      this.setState({ ...this.state, details: { ...details, body: value } });
+    } else {
+      this.setState({ ...this.state, details: { ...details, title: value } });
+    }
   }
 
   submitPostDetails() {
-    const { editingPost, post } = this.props;
-    editingPost(post).then(() => this.setState({ isEditable: false }));
+    const { editingPost } = this.props;
+    const { details } = this.state;
+    editingPost(details).then(() => this.setState({ isEditable: false }));
   }
 
   votePostAction(vote) {
-    const { votingPost, post } = this.props;
-    votingPost(vote, post);
+    const { votingPost } = this.props;
+    const { details } = this.state;
+    votingPost(vote, { ...details }).then(() => {
+      vote === "upVote"
+        ? this.setState({
+            ...this.state,
+            details: { ...details, voteScore: details.voteScore + 1 }
+          })
+        : this.setState({
+            ...this.state,
+            details: { ...details, voteScore: details.voteScore - 1 }
+          });
+    });
   }
 
   componentDidMount() {
-    const { category } = this.props.match.params;
-    const { post, history } = this.props;
-    post === null || category !== post.category
-      ? history.push("/error404")
-      : this.setState({ ...this.state, details: post });
+    const { category, postId, history } = this.props;
+
+    if (category && postId) {
+      getPost(postId).then(post => {
+        post && post.category === category
+          ? this.setState({ ...this.state, details: { ...post } })
+          : history.push("/error404");
+      });
+    } else {
+      history.push("/error404");
+    }
   }
 
   render() {
-    const { history, deletingPost, comments, post } = this.props;
+    const { history, deletingPost, comments } = this.props;
     const { isEditable, isNewComment } = this.state;
+    const { details } = this.state;
 
-    console.log("Post", "render", "post", post);
     return (
       <div>
         {!isEditable ? (
           <PostData
-            details={post}
+            details={details}
             voteAction={vote => this.votePostAction(vote)}
             editAction={() => this.toggleEditPost()}
             deleteAction={() =>
-              deletingPost(post.id).then(() => history && history.goBack())
+              deletingPost(details.id).then(() => history && history.goBack())
             }
           />
         ) : (
           <EditPostForm
-            details={post}
+            details={details}
             onSubmit={() => this.submitPostDetails()}
             onChange={event => this.editPostDetails(event)}
             onClick={() => this.toggleEditPost()}
           />
         )}
-        <strong>Author: {post.author}</strong> <br />
+        <strong>Author: {details.author}</strong> <br />
         {`Comments: ${
           comments.filter(c => c.deleted === false).length
-        }, Votes: ${post.voteScore}`}
+        }, Votes: ${details.voteScore}`}
         <h3>Comments</h3>
         {isNewComment ? (
-          <NewComment close={() => this.toggleNewComment()} postId={post.id} />
+          <NewComment
+            close={() => this.toggleNewComment()}
+            postId={details.id}
+          />
         ) : (
           <button onClick={() => this.toggleNewComment()}>New comment</button>
         )}
         <br />
-        <CommentsList postId={post.id} />
+        <CommentsList postId={details.id} />
         <BackButton />
       </div>
     );
   }
 }
 
-const mapStateToProps = (
-  { comments, allPosts },
-  { history, deletingPost, match }
-) => {
-  const { postId } = match.params;
-  const post = allPosts.find(p => p.id === postId);
+const mapStateToProps = ({ comments }, { history, match }) => {
+  const { postId, category } = match.params;
   return {
     comments,
     history,
-    deletingPost,
-    post
+    category,
+    postId
   };
 };
 
