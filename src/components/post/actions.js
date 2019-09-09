@@ -3,7 +3,9 @@ import {
   addNewPost,
   deletePost,
   editPost,
-  votePost
+  votePost,
+  getPostsPerCategories,
+  getPost
 } from "../../api/API";
 
 export const FETCHED_POSTS = "FETCHED_POSTS";
@@ -11,58 +13,46 @@ export const ADDED_NEW_POST = "ADDED_NEW_POST";
 export const DELETED_POST = "DELETED_POST";
 export const SORTED_POSTS = "SORTED_POSTS";
 export const EDITED_POST = "EDITED_POST";
+export const FETCHED_POSTS_PER_CATEGORY = "FETCHED_POSTS_PER_CATEGORY";
+export const FOUND_POST = "FOUND_POST";
 
-function fetchedPosts(allPosts) {
-  return { type: FETCHED_POSTS, allPosts };
-}
+const fetchedPosts = allPosts => ({ type: FETCHED_POSTS, allPosts });
 
-function addedNewPost(newPost) {
-  return { type: ADDED_NEW_POST, newPost };
-}
+const addedNewPost = newPost => ({ type: ADDED_NEW_POST, newPost });
+const sortedPosts = sortBy => ({ type: SORTED_POSTS, sortBy });
+const deletedPost = postId => ({ type: DELETED_POST, postId });
+const editedPost = editedPost => ({ type: EDITED_POST, editedPost });
+const fetchedPostsPerCategory = posts => ({
+  type: FETCHED_POSTS_PER_CATEGORY,
+  payload: posts
+});
+const findedPost = post => ({ type: FOUND_POST, payload: post });
 
-function sortedPosts(sortBy) {
-  return { type: SORTED_POSTS, sortBy };
-}
+const sortingPosts = sortBy => dispatch => dispatch(sortedPosts(sortBy));
 
-function deletedPost(postId) {
-  return { type: DELETED_POST, postId };
-}
-
-function editedPost(editedPost) {
-  return { type: EDITED_POST, editedPost };
-}
-
-const sortingPosts = sortBy => dispatch => {
-  dispatch(sortedPosts(sortBy));
-};
-
-const fetchingPosts = () => dispatch => {
+const fetchingPosts = () => dispatch =>
   getAllPosts().then(allPosts => {
     dispatch(fetchedPosts(allPosts));
   });
-};
 
-const addingNewPost = newPost => dispatch => {
+const addingNewPost = newPost => dispatch =>
   addNewPost(newPost).then(() => {
     dispatch(addedNewPost(newPost));
   });
-};
 
-const deletingPost = postId => dispatch => {
+const deletingPost = postId => dispatch =>
   deletePost(postId).then(() => {
     dispatch(deletedPost(postId));
   });
-};
 
-const editingPost = postEdited => dispatch => {
+const editingPost = postEdited => dispatch =>
   editPost(postEdited).then(() => {
     dispatch(editedPost(postEdited));
   });
-};
 
 const votingPost = (vote, post) => dispatch => {
   const { id } = post;
-  votePost(vote, id).then(() => {
+  return votePost(vote, id).then(() => {
     if (vote === "upVote") {
       dispatch(editedPost({ ...post, voteScore: post.voteScore + 1 }));
     } else {
@@ -71,11 +61,23 @@ const votingPost = (vote, post) => dispatch => {
   });
 };
 
+const fetchingPostsPerCategories = category => dispatch =>
+  getPostsPerCategories(category).then(posts => {
+    dispatch(fetchedPostsPerCategory(posts));
+  });
+
+const findingPost = id => dispatch =>
+  getPost(id).then(post => {
+    dispatch(findedPost(post));
+  });
+
 export {
   fetchingPosts,
   addingNewPost,
   deletingPost,
   sortingPosts,
   editingPost,
-  votingPost
+  votingPost,
+  fetchingPostsPerCategories,
+  findingPost
 };

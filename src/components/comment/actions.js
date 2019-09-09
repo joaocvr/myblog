@@ -10,52 +10,33 @@ export const VOTED_COMMENT = "VOTED_COMMENT";
 export const DELETED_COMMENT = "DELETED_COMMENT";
 export const ADDED_COMMENT = "ADDED_COMMENT";
 
-function votedComment(vote, commentId) {
-  return { type: VOTED_COMMENT, vote, commentId };
-}
+const votedComment = (vote, commentId) => ({
+  type: VOTED_COMMENT,
+  vote,
+  commentId
+});
+const fetchedComments = comments => ({ type: FETCHED_COMMENTS, comments });
+const deletedComment = commentId => ({ type: DELETED_COMMENT, commentId });
+const addedComment = newComment => ({ type: ADDED_COMMENT, newComment });
 
-function fetchedComments(comments) {
-  return { type: FETCHED_COMMENTS, comments };
-}
+const votingComment = (vote, commentId) => dispatch =>
+  voteComment(vote, commentId).then(() => {
+    dispatch(votedComment(vote, commentId));
+  });
 
-function deletedComment(commentId) {
-  return { type: DELETED_COMMENT, commentId };
-}
+const fetchingComments = postId => dispatch =>
+  getPostComments(postId).then(comments => {
+    dispatch(fetchedComments(comments));
+  });
 
-function addedComment(newComment) {
-  return { type: ADDED_COMMENT, newComment };
-}
+const deletingComment = commentId => dispatch =>
+  deleteComment(commentId).then(({ id }) => {
+    dispatch(deletedComment(id));
+  });
 
-function votingComment(vote, commentId) {
-  return dispatch => {
-    voteComment(vote, commentId).then(() => {
-      dispatch(votedComment(vote, commentId));
-    });
-  };
-}
-
-function fetchingComments(postId) {
-  return dispatch => {
-    getPostComments(postId).then(comments => {
-      dispatch(fetchedComments(comments));
-    });
-  };
-}
-
-function deletingComment(commentId) {
-  return dispatch => {
-    deleteComment(commentId).then(({ id }) => {
-      dispatch(deletedComment(id));
-    });
-  };
-}
-
-function addingNewComment(newComment) {
-  return dispatch => {
-    addNewComment(newComment).then(() => {
-      dispatch(addedComment(newComment));
-    });
-  };
-}
+const addingNewComment = newComment => dispatch =>
+  addNewComment(newComment).then(() => {
+    dispatch(addedComment(newComment));
+  });
 
 export { votingComment, fetchingComments, deletingComment, addingNewComment };

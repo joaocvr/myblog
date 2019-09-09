@@ -3,7 +3,9 @@ import {
   DELETED_POST,
   ADDED_NEW_POST,
   SORTED_POSTS,
-  EDITED_POST
+  EDITED_POST,
+  FETCHED_POSTS_PER_CATEGORY,
+  FOUND_POST
 } from "./actions";
 
 export const postsReducer = (state = [], action) => {
@@ -27,6 +29,15 @@ export const postsReducer = (state = [], action) => {
     case EDITED_POST: {
       const { editedPost } = action;
       return state.map(p => (p.id === editedPost.id ? editedPost : p));
+    }
+
+    case FETCHED_POSTS_PER_CATEGORY: {
+      return action.payload;
+    }
+
+    case FOUND_POST: {
+      console.log("Post-reducer", "action.payload", action.payload);
+      return [action.payload];
     }
 
     default:

@@ -6,8 +6,7 @@ import CommentsList from "../comment/CommentsList";
 import NewComment from "../comment/NewComment";
 import PostData from "./PostData";
 import EditPostForm from "./EditPostForm";
-import { deletingPost, editingPost, votingPost } from "./actions";
-import { getPost } from "../../api/API";
+import { deletingPost, editingPost, votingPost, findingPost } from "./actions";
 
 class Post extends Component {
   state = {
@@ -43,9 +42,9 @@ class Post extends Component {
   }
 
   votePostAction(vote) {
-    const { votingPost } = this.props;
+    const { votingPost, post } = this.props;
     const { details } = this.state;
-    votingPost(vote, { ...details }).then(() => {
+    votingPost(vote, post).then(() => {
       vote === "upVote"
         ? this.setState({
             ...this.state,
@@ -59,84 +58,84 @@ class Post extends Component {
   }
 
   componentDidMount() {
-    const { category, postId, history } = this.props;
+    const { postId, findingPost } = this.props;
+    findingPost(postId);
+  }
 
-    if (category && postId) {
-      getPost(postId).then(post => {
-        post && post.category === category
-          ? this.setState({ ...this.state, details: { ...post } })
-          : history.push("/error404");
-      });
-    } else {
-      history.push("/error404");
+  componentDidUpdate(prevProps) {
+    const { postId, findingPost } = this.props;
+    if (postId !== prevProps.postId) {
+      findingPost(postId);
     }
   }
 
   render() {
-    const { history, deletingPost, comments } = this.props;
+    const { history, deletingPost, comments, post } = this.props;
     const { isEditable, isNewComment } = this.state;
-    const { details } = this.state;
+
+    console.log("Post", "render");
 
     return (
       <div>
         {!isEditable ? (
           <PostData
-            details={details}
+            details={post}
             voteAction={vote => this.votePostAction(vote)}
             editAction={() => this.toggleEditPost()}
             deleteAction={() =>
-              deletingPost(details.id).then(() => history && history.goBack())
+              deletingPost(post.id).then(() => history && history.goBack())
             }
           />
         ) : (
           <EditPostForm
-            details={details}
+            details={post}
             onSubmit={() => this.submitPostDetails()}
             onChange={event => this.editPostDetails(event)}
             onClick={() => this.toggleEditPost()}
           />
         )}
-        <strong>Author: {details.author}</strong> <br />
+        <strong>Author: {post.author}</strong> <br />
         {`Comments: ${
           comments.filter(c => c.deleted === false).length
-        }, Votes: ${details.voteScore}`}
+        }, Votes: ${post.voteScore}`}
         <h3>Comments</h3>
         {isNewComment ? (
-          <NewComment
-            close={() => this.toggleNewComment()}
-            postId={details.id}
-          />
+          <NewComment close={() => this.toggleNewComment()} postId={post.id} />
         ) : (
           <button onClick={() => this.toggleNewComment()}>New comment</button>
         )}
         <br />
-        <CommentsList postId={details.id} />
+        <CommentsList postId={post.id} />
         <BackButton />
       </div>
     );
   }
 }
 
-const mapStateToProps = ({ comments }, { history, match }) => {
+const mapStateToProps = ({ comments, allPosts }, { history, match }) => {
   const { postId, category } = match.params;
   return {
     comments,
     history,
     category,
-    postId
+    postId,
+    post: allPosts.length > 0 ? allPosts[0] : {}
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    deletingPost: async postId => {
+    deletingPost: postId => {
       dispatch(deletingPost(postId));
     },
-    editingPost: async editedPost => {
+    editingPost: editedPost => {
       dispatch(editingPost(editedPost));
     },
-    votingPost: async (vote, post) => {
+    votingPost: (vote, post) => {
       dispatch(votingPost(vote, post));
+    },
+    findingPost: id => {
+      dispatch(findingPost(id));
     }
   };
 };
