@@ -26,7 +26,7 @@ const fetchedPostsPerCategory = posts => ({
   type: FETCHED_POSTS_PER_CATEGORY,
   payload: posts
 });
-const findedPost = post => ({ type: FOUND_POST, payload: post });
+const foundPost = post => ({ type: FOUND_POST, payload: post });
 
 const sortingPosts = sortBy => dispatch => dispatch(sortedPosts(sortBy));
 
@@ -68,7 +68,7 @@ const fetchingPostsPerCategories = category => dispatch =>
 
 const findingPost = id => dispatch =>
   getPost(id).then(post => {
-    dispatch(findedPost(post));
+    dispatch(foundPost(post));
   });
 
 export {

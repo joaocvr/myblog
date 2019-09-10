@@ -12,7 +12,7 @@ class Post extends Component {
   state = {
     isEditable: false,
     isNewComment: false,
-    details: {}
+    editedPost: {}
   };
 
   toggleNewComment() {
@@ -26,54 +26,56 @@ class Post extends Component {
   }
 
   editPostDetails(event) {
-    const { details } = this.state;
+    const { editedPost } = this.state;
     const { name, value } = event.target;
+    console.log("Post", "editPostDetails", "editedPost", editedPost);
+    console.log("Post", "editPostDetails", "name", name);
+    console.log("Post", "editPostDetails", "value", value);
     if (name === "body") {
-      this.setState({ ...this.state, details: { ...details, body: value } });
+      this.setState({
+        ...this.state,
+        editedPost: { ...editedPost, body: value }
+      });
     } else {
-      this.setState({ ...this.state, details: { ...details, title: value } });
+      this.setState({
+        ...this.state,
+        editedPost: { ...editedPost, title: value }
+      });
     }
   }
 
   submitPostDetails() {
     const { editingPost } = this.props;
-    const { details } = this.state;
-    editingPost(details).then(() => this.setState({ isEditable: false }));
+    const { editedPost } = this.state;
+    editingPost(editedPost).then(() => this.setState({ isEditable: false }));
   }
 
   votePostAction(vote) {
     const { votingPost, post } = this.props;
-    const { details } = this.state;
-    votingPost(vote, post).then(() => {
-      vote === "upVote"
-        ? this.setState({
-            ...this.state,
-            details: { ...details, voteScore: details.voteScore + 1 }
-          })
-        : this.setState({
-            ...this.state,
-            details: { ...details, voteScore: details.voteScore - 1 }
-          });
-    });
+    votingPost(vote, post);
   }
 
   componentDidMount() {
     const { postId, findingPost } = this.props;
-    findingPost(postId);
+    findingPost(postId).then(() => {
+      const { post } = this.props;
+      this.setState({ ...this.state, editedPost: post });
+    });
   }
 
   componentDidUpdate(prevProps) {
     const { postId, findingPost } = this.props;
     if (postId !== prevProps.postId) {
-      findingPost(postId);
+      findingPost(postId).then(() => {
+        const { post } = this.props;
+        this.setState({ ...this.state, editedPost: post });
+      });
     }
   }
 
   render() {
     const { history, deletingPost, comments, post } = this.props;
-    const { isEditable, isNewComment } = this.state;
-
-    console.log("Post", "render");
+    const { isEditable, isNewComment, editedPost } = this.state;
 
     return (
       <div>
@@ -88,7 +90,7 @@ class Post extends Component {
           />
         ) : (
           <EditPostForm
-            details={post}
+            details={editedPost}
             onSubmit={() => this.submitPostDetails()}
             onChange={event => this.editPostDetails(event)}
             onClick={() => this.toggleEditPost()}
@@ -125,18 +127,10 @@ const mapStateToProps = ({ comments, allPosts }, { history, match }) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    deletingPost: postId => {
-      dispatch(deletingPost(postId));
-    },
-    editingPost: editedPost => {
-      dispatch(editingPost(editedPost));
-    },
-    votingPost: (vote, post) => {
-      dispatch(votingPost(vote, post));
-    },
-    findingPost: id => {
-      dispatch(findingPost(id));
-    }
+    deletingPost: postId => dispatch(deletingPost(postId)),
+    editingPost: editedPost => dispatch(editingPost(editedPost)),
+    votingPost: (vote, post) => dispatch(votingPost(vote, post)),
+    findingPost: id => dispatch(findingPost(id))
   };
 };
 

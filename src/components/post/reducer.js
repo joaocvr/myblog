@@ -31,14 +31,11 @@ export const postsReducer = (state = [], action) => {
       return state.map(p => (p.id === editedPost.id ? editedPost : p));
     }
 
-    case FETCHED_POSTS_PER_CATEGORY: {
+    case FETCHED_POSTS_PER_CATEGORY:
       return action.payload;
-    }
 
-    case FOUND_POST: {
-      console.log("Post-reducer", "action.payload", action.payload);
+    case FOUND_POST:
       return [action.payload];
-    }
 
     default:
       return state;
